@@ -1,6 +1,6 @@
 {
-  "name": "Calculadora Pruebas Permanencia",
-  "short_name": "Permanencia",
+  "name": "Calc Perm",
+  "short_name": "Calc Perm",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
