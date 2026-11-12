@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Permanencia">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#12151f">
+<title>Calculadora Pruebas Permanencia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap">
+<style>
+/* Layout: cabecera en degradado, tarjetas con filo naranja por prueba y total fijo abajo. Un solo aspecto oscuro, a propósito. */
+:root {
+  --bg: #12151f;
+  --surface: #1e2230;
+  --field: #2b3042;
+  --line: #2e3448;
+  --ink: #f2f4f8;
+  --muted: #8c93a8;
+  --purple: #a78bdb;
+  --orange: #ff7a00;
+  --orange-ink: #ffffff;
+  --grad-a: #7b2cbf;
+  --grad-b: #ff7a00;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.4;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 170px;
+}
+.top {
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding: 28px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(100deg, var(--grad-a), var(--grad-b));
+  text-align: center;
+}
+.top h1 { margin: 0; font-size: 1.9rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; }
+.top p { margin: 6px 0 0; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #ffd3e8; }
+.wrap { max-width: 640px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--orange); border-radius: 18px; padding: 16px 16px 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.head h2 { margin: 0; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purple); min-width: 0; }
+.badge { background: var(--orange); color: var(--orange-ink); font-weight: 800; border-radius: 8px; padding: 6px 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+select, input {
+  font: inherit; font-size: 1.25rem; color: var(--ink); background: var(--field); border: 1px solid transparent;
+  border-radius: 14px; padding: 18px 14px; width: 100%; min-width: 0; text-align: center; font-variant-numeric: tabular-nums;
+}
+select { background: var(--bg); border-color: var(--orange); text-align: left; font-weight: 600; }
+input::placeholder { color: var(--muted); opacity: 1; }
+select:focus-visible, input:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+.row { display: flex; align-items: center; gap: 12px; }
+.row b { color: var(--orange); font-size: 1.5rem; }
+.bands { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.6rem, 1fr)); gap: 6px; }
+.band { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 0.75rem; color: var(--muted); display: flex; flex-direction: column; gap: 1px; min-width: 0; font-variant-numeric: tabular-nums; }
+.band b { font-size: 0.95rem; color: var(--ink); }
+.band.on { background: var(--orange); border-color: var(--orange); color: var(--orange-ink); }
+.band.on b { color: var(--orange-ink); }
+.note { font-size: 0.8125rem; color: var(--muted); margin: 0; text-align: center; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); border-top: 1px solid var(--line); text-align: center;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.total { font-size: 2.4rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.1; }
+.total b { color: var(--orange); font-size: 3.4rem; vertical-align: -0.08em; }
+.total span { color: var(--purple); font-size: 1.6rem; }
+.sub { margin: 4px 0 0; font-size: 0.95rem; }
+.sub em { color: var(--orange); font-style: normal; font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) { .band { transition: background 0.15s, color 0.15s; } }
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Academia AJ</h1>
+  <p>Pruebas físicas permanencia</p>
+</header>
+
+<div class="wrap">
+  <section class="card">
+    <h2 class="head" style="margin:0;font-size:1rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--purple)"><label for="sexo">Sexo aspirante</label></h2>
+    <select id="sexo">
+      <option value="H">Hombre (H)</option>
+      <option value="M">Mujer (M)</option>
+    </select>
+  </section>
+
+  <div id="cards" style="display:flex;flex-direction:column;gap:16px"></div>
+
+  <p class="note">Cada prueba puntúa de 0 a 5. Si una marca coincide con el límite entre dos tramos, puntúa en el tramo mejor.</p>
+</div>
+
+<div class="bar" role="status" aria-live="polite">
+  <div class="total">Total: <b id="total">0</b> <span>/ 15 pts</span></div>
+  <p class="sub" id="sub">Rellena las pruebas para ver tu nota.</p>
+</div>
+
+<script>
+(function () {
+  var AB = ["+4′00″","4′00″ – 2′40″","2′39″ – 1′25″","1′24″ – 0′40″","0′39″ – 0′25″","–0′25″"];
+  var TESTS = [
+    { id: "pot", name: "1. Potencia tren superior", kind: "num", dir: "hi", ph: "Nº flexiones",
+      lim: { H: [55,44,34,24,11], M: [37,30,22,14,6] },
+      lab: { H: ["+55","44–55","34–43","24–33","11–23","0–10"], M: ["+37","30–37","22–29","14–21","6–13","0–5"] } },
+    { id: "abd", name: "2. Fuerza abdominal", kind: "time", dir: "hi",
+      lim: { H: [240,160,85,40,25], M: [240,160,85,40,25] }, lab: { H: AB, M: AB } },
+    { id: "res", name: "3. Resistencia 2.000 m", kind: "time", dir: "lo",
+      lim: { H: [411,490,570,650,730], M: [475,554,634,714,834] },
+      lab: { H: ["–6′51″","6′51″ – 8′10″","8′11″ – 9′30″","9′31″ – 10′50″","10′51″ – 12′10″","+12′10″"],
+             M: ["–7′55″","7′55″ – 9′14″","9′15″ – 10′34″","10′35″ – 11′54″","11′55″ – 13′54″","+13′54″"] } },
+    { id: "agi", name: "4. Circuito agilidad", kind: "dec", dir: "lo", ph: "Segundos (ej. 14,2)",
+      lim: { H: [12.8,13.7,14.8,15.2,16.2], M: [14.1,14.8,15.8,16.8,17.8] },
+      lab: { H: ["–12,8″","12,8″ – 13,7″","13,8″ – 14,8″","14,9″ – 15,2″","15,3″ – 16,2″","+16,2″"],
+             M: ["–14,1″","14,1″ – 14,8″","14,9″ – 15,8″","15,9″ – 16,8″","16,9″ – 17,8″","+17,8″"] } }
+  ];
+
+  var cards = document.getElementById("cards");
+  TESTS.forEach(function (t) {
+    var fields = t.kind === "time"
+      ? '<div class="row"><input id="' + t.id + '-m" inputmode="numeric" autocomplete="off" placeholder="Min" aria-label="Minutos"><b>:</b><input id="' + t.id + '-s" inputmode="numeric" autocomplete="off" placeholder="Seg" aria-label="Segundos"></div>'
+      : '<input id="' + t.id + '-v" inputmode="' + (t.kind === "dec" ? "decimal" : "numeric") + '" autocomplete="off" placeholder="' + t.ph + '" aria-label="' + t.ph + '">';
+    var el = document.createElement("section");
+    el.className = "card";
+    el.innerHTML = '<div class="head"><h2>' + t.name + '</h2><span class="badge" id="' + t.id + '-p">0 pts</span></div>' +
+      fields + '<div class="bands" id="' + t.id + '-b"></div>';
+    cards.appendChild(el);
+  });
+
+  function num(id) {
+    var s = document.getElementById(id).value.trim().replace(",", ".");
+    if (s === "") return null;
+    var n = Number(s);
+    return isNaN(n) || n < 0 ? null : n;
+  }
+  function value(t) {
+    if (t.kind === "time") {
+      var m = num(t.id + "-m"), s = num(t.id + "-s");
+      if (m === null && s === null) return null;
+      return (m || 0) * 60 + (s || 0);
+    }
+    return num(t.id + "-v");
+  }
+  function points(t, v, sex) {
+    var lim = t.lim[sex], i;
+    for (i = 0; i < 5; i++) {
+      if (t.dir === "hi" ? v >= lim[i] : Math.round(v * 10) / 10 <= lim[i] + 1e-9) return 5 - i;
+    }
+    return 0;
+  }
+
+  function update() {
+    var sx = document.getElementById("sexo").value, sum = 0, done = 0;
+    TESTS.forEach(function (t) {
+      var v = value(t), p = v === null ? null : points(t, v, sx);
+      document.getElementById(t.id + "-p").textContent = (p === null ? 0 : p) + " pts";
+      var html = "";
+      for (var i = 0; i < 6; i++) {
+        html += '<div class="band' + (p !== null && p === 5 - i ? " on" : "") + '"><b>' + (5 - i) + '</b>' + t.lab[sx][i] + '</div>';
+      }
+      document.getElementById(t.id + "-b").innerHTML = html;
+      if (p !== null) { sum += p; done++; }
+    });
+    document.getElementById("total").textContent = Math.min(15, sum);
+    document.getElementById("sub").innerHTML = sum >= 15
+      ? "Máximo de oposición alcanzado (15 pts). Suma real: <em>" + sum + " pts.</em>"
+      : (done === 0 ? "Rellena las pruebas para ver tu nota." : "Suma real: <em>" + sum + " pts.</em>");
+  }
+
+  document.addEventListener("input", update);
+  document.getElementById("sexo").addEventListener("change", update);
+  update();
+})();
+</script>
+</body>
+</html>
